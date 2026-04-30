@@ -22,117 +22,130 @@ class LicenseActivity : AppCompatActivity() {
         binding = ActivityLicenseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val daysLeft = LicenseManager.getTrialDaysRemaining(this)
+        val daysLeft    = LicenseManager.getTrialDaysRemaining(this)
         val isActivated = LicenseManager.isActivated(this)
 
-        if (isActivated) {
-            // Already licensed — show status and allow continuing
-            showActivatedState()
-        } else if (daysLeft > 0) {
-            // Still in trial
-            showTrialState(daysLeft)
-        } else {
-            // Trial expired
-            showExpiredState()
+        when {
+            isActivated  -> showActivatedState()
+            daysLeft > 0 -> showTrialState(daysLeft)
+            else         -> showExpiredState()
         }
 
-        // Pre-fill business name if already set
+        // Pre-fill fields
         val prefs = PrefsManager(this)
         if (prefs.isBusinessSetup()) {
             binding.etLicenseBusinessName.setText(prefs.getBusinessName())
         }
-
-        // Pre-fill saved key if any
         val savedKey = LicenseManager.getSavedKey(this)
-        if (savedKey.isNotEmpty()) {
-            binding.etLicenseKey.setText(savedKey)
-        }
+        if (savedKey.isNotEmpty()) binding.etLicenseKey.setText(savedKey)
 
         binding.btnActivate.setOnClickListener { attemptActivation() }
-
         binding.btnContinueTrial.setOnClickListener { proceedToApp() }
-
         binding.btnPasteKey.setOnClickListener {
-            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val text = clipboard.primaryClip?.getItemAt(0)?.text?.toString() ?: ""
-            if (text.isNotEmpty()) {
-                binding.etLicenseKey.setText(text)
-            } else {
-                Toast.makeText(this, "Nothing in clipboard", Toast.LENGTH_SHORT).show()
-            }
+            val cb = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val text = cb.primaryClip?.getItemAt(0)?.text?.toString() ?: ""
+            if (text.isNotEmpty()) binding.etLicenseKey.setText(text)
+            else Toast.makeText(this, "Nothing in clipboard", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun showTrialState(daysLeft: Long) {
-        val dayWord = if (daysLeft == 1L) "day" else "days"
+        val word = if (daysLeft == 1L) "day" else "days"
         binding.tvLicenseStatus.text = "⏳ Free Trial"
         binding.tvLicenseMessage.text =
-            "You have $daysLeft $dayWord remaining in your free trial.\nActivate now to use ToMega POS forever."
+            "You have $daysLeft $word remaining in your free trial.\n" +
+            "Activate now to use ToMega POS forever."
         binding.tvLicenseStatus.setTextColor(getColor(com.smallbiz.app.R.color.orange_500))
         binding.btnContinueTrial.visibility = View.VISIBLE
-        binding.btnContinueTrial.text = "Continue Trial ($daysLeft $dayWord left)"
+        binding.btnContinueTrial.text = "Continue Trial ($daysLeft $word left)"
         binding.cardActivation.visibility = View.VISIBLE
+        binding.tvKeyTypeHint.visibility = View.VISIBLE
     }
 
     private fun showExpiredState() {
         binding.tvLicenseStatus.text = "🔒 Trial Expired"
         binding.tvLicenseMessage.text =
-            "Your 3-day free trial has ended.\nEnter your license key to continue using ToMega POS."
+            "Your 3-day free trial has ended.\n" +
+            "Enter your license key to continue using ToMega POS."
         binding.tvLicenseStatus.setTextColor(getColor(com.smallbiz.app.R.color.red_400))
         binding.btnContinueTrial.visibility = View.GONE
         binding.cardActivation.visibility = View.VISIBLE
+        binding.tvKeyTypeHint.visibility = View.VISIBLE
     }
 
     private fun showActivatedState() {
         val bizName = LicenseManager.getLicensedBusinessName(this)
+        val type    = LicenseManager.getLicenseType(this)
+        val seats   = LicenseManager.getBatchSeats(this)
+        val typeLabel = if (type == "batch") "Batch License ($seats seats)" else "Single License"
         binding.tvLicenseStatus.text = "✅ Licensed"
-        binding.tvLicenseMessage.text = "ToMega POS is fully activated for:\n$bizName"
+        binding.tvLicenseMessage.text = "ToMega POS is fully activated.\n$bizName\n$typeLabel"
         binding.tvLicenseStatus.setTextColor(getColor(com.smallbiz.app.R.color.green_500))
         binding.btnContinueTrial.visibility = View.VISIBLE
         binding.btnContinueTrial.text = "Continue to App"
         binding.cardActivation.visibility = View.GONE
+        binding.tvKeyTypeHint.visibility = View.GONE
     }
 
     private fun attemptActivation() {
         val name = binding.etLicenseBusinessName.text.toString().trim()
         val key  = binding.etLicenseKey.text.toString().trim()
 
-        if (name.isEmpty()) {
-            binding.etLicenseBusinessName.error = "Enter your business name"
-            return
-        }
-        if (key.isEmpty()) {
-            binding.etLicenseKey.error = "Enter your license key"
-            return
-        }
+        if (name.isEmpty()) { binding.etLicenseBusinessName.error = "Enter your business name"; return }
+        if (key.isEmpty())  { binding.etLicenseKey.error = "Enter your license key"; return }
 
-        binding.btnActivate.isEnabled = false
-        binding.progressActivation.visibility = View.VISIBLE
+        setLoading(true)
 
-        when (LicenseManager.activate(this, name, key)) {
+        LicenseManager.activate(this, name, key) { result ->
+            runOnUiThread {
+                setLoading(false)
+                handleResult(result)
+            }
+        }
+    }
+
+    private fun handleResult(result: LicenseManager.ActivationResult) {
+        when (result) {
             LicenseManager.ActivationResult.SUCCESS -> {
-                binding.progressActivation.visibility = View.GONE
                 Toast.makeText(this, "✅ Activated! Welcome to ToMega POS.", Toast.LENGTH_LONG).show()
                 showActivatedState()
-                // Small delay then proceed
                 binding.root.postDelayed({ proceedToApp() }, 1500)
             }
             LicenseManager.ActivationResult.INVALID_KEY -> {
-                binding.progressActivation.visibility = View.GONE
-                binding.btnActivate.isEnabled = true
                 binding.etLicenseKey.error = "Invalid key for this business name"
                 Toast.makeText(this, "❌ License key is incorrect", Toast.LENGTH_LONG).show()
             }
             LicenseManager.ActivationResult.INVALID_FORMAT -> {
-                binding.progressActivation.visibility = View.GONE
-                binding.btnActivate.isEnabled = true
-                binding.etLicenseKey.error = "Key must be in format: TMPOS-XXXX-XXXX-XXXX-XXXX"
+                binding.etLicenseKey.error = "Invalid key format.\nSingle: TMPOS-XXXX-XXXX-XXXX-XXXX\nBatch:  TMBAT-XXXX-NNN-XX"
             }
             LicenseManager.ActivationResult.INVALID_NAME -> {
-                binding.progressActivation.visibility = View.GONE
-                binding.btnActivate.isEnabled = true
                 binding.etLicenseBusinessName.error = "Business name cannot be empty"
             }
+            LicenseManager.ActivationResult.SEATS_EXHAUSTED -> {
+                Toast.makeText(
+                    this,
+                    "❌ This batch key has reached its maximum number of activations.\nContact ToMega for a new key.",
+                    Toast.LENGTH_LONG
+                ).show()
+                binding.etLicenseKey.error = "All seats used — key is full"
+            }
+            LicenseManager.ActivationResult.NETWORK_ERROR -> {
+                Toast.makeText(
+                    this,
+                    "⚠️ Could not reach the server. Check your internet connection and try again.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun setLoading(loading: Boolean) {
+        binding.btnActivate.isEnabled = !loading
+        binding.progressActivation.visibility = if (loading) View.VISIBLE else View.GONE
+        if (loading) {
+            binding.btnActivate.text = "Verifying…"
+        } else {
+            binding.btnActivate.text = "🔑  Activate Now"
         }
     }
 
