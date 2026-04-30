@@ -9,7 +9,6 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -29,11 +28,11 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Image Picker Card -->
+            <!-- ── Image Card ── -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="14dp"
                 app:cardElevation="3dp"
                 app:cardCornerRadius="12dp"
                 app:cardBackgroundColor="@color/white">
@@ -48,16 +47,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Product Image"
+                        android:text="Product Photo"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_primary"
-                        android:paddingBottom="12dp" />
+                        android:paddingBottom="10dp" />
 
+                    <!-- Product image — tap to change -->
                     <ImageView
                         android:id="@+id/ivProductImage"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_product_placeholder"
                         android:background="@color/grey_100"
@@ -65,18 +65,40 @@
                         android:clickable="true"
                         android:focusable="true" />
 
-                    <Button
-                        android:id="@+id/btnPickImage"
-                        android:layout_width="wrap_content"
+                    <!-- Two buttons side by side: Camera + Gallery -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="📷  Change Image"
-                        android:textSize="13sp"
-                        style="@style/OutlineButton" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="12dp">
+
+                        <!-- Direct camera button — prominent -->
+                        <Button
+                            android:id="@+id/btnTakePhoto"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="6dp"
+                            android:text="📷 Take Photo"
+                            android:textSize="13sp"
+                            style="@style/PrimaryButton" />
+
+                        <!-- Gallery / other options -->
+                        <Button
+                            android:id="@+id/btnPickImage"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="6dp"
+                            android:text="🖼 Gallery"
+                            android:textSize="13sp"
+                            style="@style/OutlineButton" />
+                    </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Product Details Card -->
+            <!-- ── Product Details Card ── -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -90,6 +112,49 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
+                    <!-- ── Product Name with Voice Input ── -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Product Name"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary"
+                        android:paddingBottom="6dp" />
+
+                    <!-- Language selector row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Input language:"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary" />
+
+                        <Button
+                            android:id="@+id/btnSelectLanguage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🇳🇬 English (Nigeria)"
+                            android:textSize="12sp"
+                            android:textColor="@color/primary"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            app:strokeColor="@color/primary"
+                            app:cornerRadius="20dp" />
+                    </LinearLayout>
+
+                    <!-- Product name field -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
@@ -100,16 +165,47 @@
                             android:id="@+id/etProductName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textCapWords"
+                            android:inputType="textCapWords|textMultiLine"
                             android:imeOptions="actionNext" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Voice input button -->
+                    <Button
+                        android:id="@+id/btnVoiceInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="🎤 Speak Product Name"
+                        android:textSize="14sp"
+                        style="@style/OutlineButton" />
+
+                    <!-- Voice hint / live transcript -->
+                    <TextView
+                        android:id="@+id/tvVoiceHint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Speak the product name…"
+                        android:textSize="12sp"
+                        android:textColor="@color/primary"
+                        android:textStyle="italic"
+                        android:gravity="center"
+                        android:visibility="gone" />
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/grey_200"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Selling Price -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilSellingPrice"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:hint="Selling Price *">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -120,6 +216,7 @@
                             android:imeOptions="actionNext" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Cost Price -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilCostPrice"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -137,6 +234,7 @@
                             android:imeOptions="actionNext" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Category -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
@@ -152,6 +250,7 @@
                             android:imeOptions="actionNext" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Stock Quantity -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
@@ -168,6 +267,7 @@
                             android:imeOptions="actionDone" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Save button -->
                     <Button
                         android:id="@+id/btnSaveProduct"
                         android:layout_width="match_parent"
@@ -177,6 +277,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold"
                         style="@style/PrimaryButton" />
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
