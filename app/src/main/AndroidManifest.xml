@@ -84,7 +84,16 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- License / Activation Activity -->
+        <!-- Staff Login + Sales Activities -->
+        <activity
+            android:name=".ui.staff.StaffLoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.staff.StaffSalesActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.license.LicenseActivity"
             android:exported="false"

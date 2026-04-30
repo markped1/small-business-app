@@ -12,6 +12,7 @@ import com.smallbiz.app.R
 import com.smallbiz.app.databinding.ActivitySalesBinding
 import com.smallbiz.app.ui.admin.AdminLoginActivity
 import com.smallbiz.app.ui.reports.ReportsActivity
+import com.smallbiz.app.ui.staff.StaffLoginActivity
 import com.smallbiz.app.utils.CurrencyFormatter
 import com.smallbiz.app.utils.PrefsManager
 
@@ -102,12 +103,12 @@ class SalesActivity : AppCompatActivity() {
         }
 
         binding.fabAdmin.setOnClickListener {
-            startActivity(Intent(this, AdminLoginActivity::class.java))
+            // Unified login — admin PIN → admin panel, staff PIN → staff sales
+            startActivity(Intent(this, StaffLoginActivity::class.java))
         }
 
-        binding.btnReports.setOnClickListener {
-            startActivity(Intent(this, ReportsActivity::class.java))
-        }
+        // Reports button only visible to admin (hidden from main sales screen)
+        binding.btnReports.visibility = View.GONE
     }
 
     private fun showCheckoutDialog() {
