@@ -59,13 +59,44 @@ class PrefsManager(context: Context) {
 
     fun getRemoteBusinessId(): String? = prefs.getString(KEY_REMOTE_BIZ_ID, null)
 
+    // ── Clock-out tracking ────────────────────────────────────────────────────
+    fun recordClockOut(staffName: String = "Staff") {
+        val ts = System.currentTimeMillis()
+        prefs.edit()
+            .putLong(KEY_LAST_CLOCK_OUT, ts)
+            .putString(KEY_LAST_CLOCK_OUT_BY, staffName)
+            .apply()
+    }
+
+    fun getLastClockOut(): Long = prefs.getLong(KEY_LAST_CLOCK_OUT, 0L)
+    fun getLastClockOutBy(): String = prefs.getString(KEY_LAST_CLOCK_OUT_BY, "") ?: ""
+
+    // ── Restock alerts ────────────────────────────────────────────────────────
+    fun saveRestockAlert(productName: String) {
+        val existing = getRestockAlerts().toMutableSet()
+        existing.add(productName)
+        prefs.edit().putStringSet(KEY_RESTOCK_ALERTS, existing).apply()
+    }
+
+    fun getRestockAlerts(): Set<String> =
+        prefs.getStringSet(KEY_RESTOCK_ALERTS, emptySet()) ?: emptySet()
+
+    fun clearRestockAlert(productName: String) {
+        val existing = getRestockAlerts().toMutableSet()
+        existing.remove(productName)
+        prefs.edit().putStringSet(KEY_RESTOCK_ALERTS, existing).apply()
+    }
+
     companion object {
-        private const val KEY_BUSINESS_NAME    = "business_name"
-        private const val KEY_BUSINESS_ADDRESS = "business_address"
-        private const val KEY_ADMIN_PIN        = "admin_pin"
-        private const val KEY_STAFF_PIN        = "staff_pin"
-        private const val KEY_IS_SETUP         = "is_setup"
-        private const val KEY_CURRENCY_CODE    = "currency_code"
-        private const val KEY_REMOTE_BIZ_ID    = "remote_biz_id"
+        private const val KEY_BUSINESS_NAME      = "business_name"
+        private const val KEY_BUSINESS_ADDRESS   = "business_address"
+        private const val KEY_ADMIN_PIN          = "admin_pin"
+        private const val KEY_STAFF_PIN          = "staff_pin"
+        private const val KEY_IS_SETUP           = "is_setup"
+        private const val KEY_CURRENCY_CODE      = "currency_code"
+        private const val KEY_REMOTE_BIZ_ID      = "remote_biz_id"
+        private const val KEY_LAST_CLOCK_OUT     = "last_clock_out"
+        private const val KEY_LAST_CLOCK_OUT_BY  = "last_clock_out_by"
+        private const val KEY_RESTOCK_ALERTS     = "restock_alerts"
     }
 }

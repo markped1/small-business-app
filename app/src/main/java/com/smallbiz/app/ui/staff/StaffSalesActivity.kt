@@ -1,23 +1,19 @@
 package com.smallbiz.app.ui.staff
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.smallbiz.app.R
+import com.smallbiz.app.data.model.Product
 import com.smallbiz.app.data.model.Sale
 import com.smallbiz.app.data.repository.AppRepository
 import com.smallbiz.app.databinding.ActivityStaffSalesBinding
-import com.smallbiz.app.ui.sales.CartAdapter
-import com.smallbiz.app.ui.sales.ProductGridAdapter
 import com.smallbiz.app.ui.sales.SalesViewModel
 import com.smallbiz.app.utils.CurrencyFormatter
 import com.smallbiz.app.utils.PrefsManager
@@ -25,34 +21,16 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Staff-only sales screen.
- *
- * Staff CAN:
- *   ✅ Sell products (add to cart, +/- qty, confirm sale)
- *   ✅ See today's total revenue and transaction count
- *   ✅ See full list of today's sales (product, qty, amount per transaction)
- *   ✅ See which products were sold and how many units
- *
- * Staff CANNOT:
- *   ❌ See profit margins or cost prices
- *   ❌ See stock levels / stock report
- *   ❌ See weekly or monthly reports
- *   ❌ See expenses
- *   ❌ Add/edit/delete products
- *   ❌ Access business settings
- *   ❌ Access admin panel
- */
 class StaffSalesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStaffSalesBinding
     private val viewModel: SalesViewModel by viewModels()
-    private lateinit var productAdapter: ProductGridAdapter
-    private lateinit var cartAdapter: CartAdapter
+    private lateinit var productAdapter: PosProductAdapter
+    private lateinit var cartAdapter: PosCartAdapter
     private lateinit var prefs: PrefsManager
     private lateinit var repository: AppRepository
 
-    // Toggle between SELL mode and DAILY REPORT mode
+    private var allProducts: List<Product> = emptyList()
     private var isReportMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,102 +41,137 @@ class StaffSalesActivity : AppCompatActivity() {
         prefs = PrefsManager(this)
         repository = AppRepository(this)
 
-        binding.tvStaffBusinessName.text = prefs.getBusinessName()
+        // Header
+        binding.tvPosBusinessName.text = prefs.getBusinessName()
+        binding.tvPosAddress.text = prefs.getBusinessAddress()
 
-        setupProductGrid()
+        setupProductList()
         setupCart()
+        setupSearch()
         setupObservers()
         setupClickListeners()
         loadTodayStats()
     }
 
-    // ── Product grid ──────────────────────────────────────────────────────────
-    private fun setupProductGrid() {
-        productAdapter = ProductGridAdapter { product ->
-            viewModel.addToCart(product)
-        }
-        binding.rvStaffProducts.apply {
-            layoutManager = GridLayoutManager(this@StaffSalesActivity, 2)
+    // ── Product list (POS style, linear) ─────────────────────────────────────
+    private fun setupProductList() {
+        productAdapter = PosProductAdapter(
+            onAddToCart = { product -> viewModel.addToCart(product) },
+            onAlertRestock = { product -> showRestockAlert(product) }
+        )
+        binding.rvPosProducts.apply {
+            layoutManager = LinearLayoutManager(this@StaffSalesActivity)
             adapter = productAdapter
         }
     }
 
     // ── Cart ──────────────────────────────────────────────────────────────────
     private fun setupCart() {
-        cartAdapter = CartAdapter(
-            onIncrement = { productId -> viewModel.incrementItem(productId) },
-            onDecrement = { productId -> viewModel.decrementItem(productId) },
-            onRemove    = { productId -> viewModel.removeFromCart(productId) }
+        cartAdapter = PosCartAdapter(
+            onIncrement = { id -> viewModel.incrementItem(id) },
+            onDecrement = { id -> viewModel.decrementItem(id) },
+            onRemove    = { id -> viewModel.removeFromCart(id) }
         )
-        binding.rvStaffCart.adapter = cartAdapter
+        binding.rvPosCart.apply {
+            layoutManager = LinearLayoutManager(this@StaffSalesActivity)
+            adapter = cartAdapter
+        }
     }
 
-    // ── LiveData observers ────────────────────────────────────────────────────
+    // ── Search ────────────────────────────────────────────────────────────────
+    private fun setupSearch() {
+        binding.etPosSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val query = s.toString().trim().lowercase()
+                val filtered = if (query.isEmpty()) allProducts
+                else allProducts.filter {
+                    it.name.lowercase().contains(query) ||
+                    it.category.lowercase().contains(query)
+                }
+                productAdapter.submitList(filtered)
+                binding.tvPosNoProducts.visibility =
+                    if (filtered.isEmpty()) View.VISIBLE else View.GONE
+                binding.tvPosNoProducts.text = if (query.isNotEmpty())
+                    "No products found for \"$query\""
+                else "No products available. Ask admin to add products."
+            }
+        })
+    }
+
+    // ── Observers ─────────────────────────────────────────────────────────────
     private fun setupObservers() {
         viewModel.products.observe(this) { products ->
+            allProducts = products
             productAdapter.submitList(products)
-            binding.tvStaffNoProducts.visibility =
+            binding.tvPosNoProducts.visibility =
                 if (products.isEmpty()) View.VISIBLE else View.GONE
         }
 
         viewModel.cart.observe(this) { cartItems ->
             cartAdapter.submitList(cartItems.toList())
             val isEmpty = cartItems.isEmpty()
-            binding.layoutStaffCartEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
-            binding.rvStaffCart.visibility = if (isEmpty) View.GONE else View.VISIBLE
-            binding.btnStaffCheckout.isEnabled = !isEmpty
+            binding.layoutPosCartEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.rvPosCart.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            binding.btnPosCheckout.isEnabled = !isEmpty
+            // Update cart badge
+            val count = cartItems.sumOf { it.quantity }
+            binding.tvPosCartBadge.text = count.toString()
+            binding.tvPosCartBadge.visibility = if (count > 0) View.VISIBLE else View.GONE
         }
 
         viewModel.cartTotal.observe(this) { total ->
-            binding.tvStaffCartTotal.text = CurrencyFormatter.format(total)
-        }
-
-        viewModel.cartItemCount.observe(this) { count ->
-            binding.tvStaffCartBadge.text = count.toString()
-            binding.tvStaffCartBadge.visibility = if (count > 0) View.VISIBLE else View.GONE
+            binding.tvPosCartTotal.text = CurrencyFormatter.format(total)
+            binding.tvPosOrderTotalFooter.text = CurrencyFormatter.format(total)
         }
     }
 
     // ── Click listeners ───────────────────────────────────────────────────────
     private fun setupClickListeners() {
-        binding.btnStaffCheckout.setOnClickListener { showCheckoutDialog() }
+        binding.btnPosCheckout.setOnClickListener { showCheckoutDialog() }
 
-        binding.btnStaffClearCart.setOnClickListener {
+        binding.btnPosClearCart.setOnClickListener {
             if ((viewModel.cart.value?.size ?: 0) > 0) {
                 AlertDialog.Builder(this)
-                    .setTitle("Clear Cart")
-                    .setMessage("Remove all items from cart?")
+                    .setTitle("Clear Order")
+                    .setMessage("Remove all items from the current order?")
                     .setPositiveButton("Clear") { _, _ -> viewModel.clearCart() }
                     .setNegativeButton("Cancel", null)
                     .show()
             }
         }
 
-        // Toggle between Sell mode and Daily Report mode
-        binding.btnDailyReport.setOnClickListener {
+        // Bottom bar buttons
+        binding.btnBottomReport.setOnClickListener {
             isReportMode = !isReportMode
-            if (isReportMode) {
-                showDailyReport()
-            } else {
-                showSellMode()
-            }
+            if (isReportMode) showDailyReport() else showSellMode()
         }
 
-        binding.btnStaffLogout.setOnClickListener { finish() }
+        binding.btnBottomClockOut.setOnClickListener { showClockOutDialog() }
+
+        binding.btnBottomLogout.setOnClickListener { finish() }
     }
 
     // ── Checkout ──────────────────────────────────────────────────────────────
     private fun showCheckoutDialog() {
         val total     = viewModel.cartTotal.value ?: 0.0
-        val itemCount = viewModel.cartItemCount.value ?: 0
+        val itemCount = viewModel.cart.value?.sumOf { it.quantity } ?: 0
+        val sdf       = SimpleDateFormat("dd MMM yyyy  HH:mm", Locale.getDefault())
+        val now       = sdf.format(Date())
 
         AlertDialog.Builder(this)
             .setTitle("Confirm Sale")
-            .setMessage("Items: $itemCount\nTotal: ${CurrencyFormatter.format(total)}\n\nComplete this sale?")
-            .setPositiveButton("Confirm Sale") { _, _ ->
+            .setMessage(
+                "Date/Time: $now\n" +
+                "Items: $itemCount\n" +
+                "Total: ${CurrencyFormatter.format(total)}\n\n" +
+                "Complete this sale?"
+            )
+            .setPositiveButton("✓ Confirm Sale") { _, _ ->
                 viewModel.checkout {
                     runOnUiThread {
-                        Toast.makeText(this, "Sale recorded!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "✓ Sale recorded at $now", Toast.LENGTH_SHORT).show()
                         loadTodayStats()
                         showSaleSuccess()
                     }
@@ -168,7 +181,49 @@ class StaffSalesActivity : AppCompatActivity() {
             .show()
     }
 
-    // ── Load today's stats (header bar) ──────────────────────────────────────
+    // ── Restock alert ─────────────────────────────────────────────────────────
+    private fun showRestockAlert(product: Product) {
+        AlertDialog.Builder(this)
+            .setTitle("Alert Management")
+            .setMessage("Send a restock request for \"${product.name}\" to the admin?")
+            .setPositiveButton("Send Alert") { _, _ ->
+                prefs.saveRestockAlert(product.name)
+                Toast.makeText(
+                    this,
+                    "✓ Restock alert sent for \"${product.name}\".\nAdmin will see it in the Admin Panel.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    // ── Clock out ─────────────────────────────────────────────────────────────
+    private fun showClockOutDialog() {
+        val sdf = SimpleDateFormat("dd MMM yyyy  HH:mm:ss", Locale.getDefault())
+        val now = sdf.format(Date())
+
+        AlertDialog.Builder(this)
+            .setTitle("Clock Out")
+            .setMessage(
+                "Clock out and end your shift?\n\n" +
+                "Time: $now\n\n" +
+                "This will record that sales for today have ended."
+            )
+            .setPositiveButton("Clock Out") { _, _ ->
+                prefs.recordClockOut()
+                Toast.makeText(
+                    this,
+                    "✓ Clocked out at $now\nHave a good rest!",
+                    Toast.LENGTH_LONG
+                ).show()
+                finish()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    // ── Today's stats ─────────────────────────────────────────────────────────
     private fun loadTodayStats() {
         lifecycleScope.launch {
             val start = AppRepository.startOfDay()
@@ -177,97 +232,100 @@ class StaffSalesActivity : AppCompatActivity() {
             val total = sales.sumOf { it.totalAmount }
             val count = sales.map { it.transactionId }.toSet().size
             runOnUiThread {
-                binding.tvTodayTotal.text = CurrencyFormatter.format(total)
-                binding.tvTodayTransactions.text = "$count sales today"
+                binding.tvPosTodayTotal.text = CurrencyFormatter.format(total)
+                binding.tvPosTodayCount.text = "$count"
             }
         }
     }
 
-    // ── Daily Report mode ─────────────────────────────────────────────────────
+    // ── Daily Report ──────────────────────────────────────────────────────────
     private fun showDailyReport() {
-        binding.btnDailyReport.text = "← Back to Sales"
-        binding.layoutSellMode.visibility = View.GONE
-        binding.layoutReportMode.visibility = View.VISIBLE
+        binding.btnBottomReport.text = "← Sales"
+        binding.layoutPosSellMode.visibility = View.GONE
+        binding.layoutPosReportMode.visibility = View.VISIBLE
 
         lifecycleScope.launch {
             val start = AppRepository.startOfDay()
             val end   = AppRepository.endOfDay()
             val sales = repository.getSalesByDaySync(start, end)
-
-            runOnUiThread {
-                bindDailyReport(sales)
-            }
+            runOnUiThread { bindDailyReport(sales) }
         }
     }
 
     private fun bindDailyReport(sales: List<Sale>) {
-        val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-        val timeFmt = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val dateFmt = SimpleDateFormat("EEEE, dd MMM yyyy", Locale.getDefault())
+        val timeFmt = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
-        binding.tvReportDate.text = "Daily Report — ${sdf.format(Date())}"
+        binding.tvPosReportDate.text = dateFmt.format(Date())
 
-        // Summary
         val totalRevenue = sales.sumOf { it.totalAmount }
-        val txCount = sales.map { it.transactionId }.toSet().size
-        val itemsSold = sales.sumOf { it.quantity }
+        val txCount      = sales.map { it.transactionId }.toSet().size
+        val itemsSold    = sales.sumOf { it.quantity }
 
-        binding.tvReportTotalRevenue.text = CurrencyFormatter.format(totalRevenue)
-        binding.tvReportTxCount.text = "$txCount transactions"
-        binding.tvReportItemsSold.text = "$itemsSold items sold"
+        binding.tvPosReportRevenue.text  = CurrencyFormatter.format(totalRevenue)
+        binding.tvPosReportTxCount.text  = "$txCount"
+        binding.tvPosReportItemsSold.text = "$itemsSold"
 
-        // Product breakdown — group by product name, sum quantities and amounts
-        val productMap = mutableMapOf<String, Pair<Int, Double>>() // name → (qty, amount)
+        // Product breakdown table
+        val productMap = mutableMapOf<String, Pair<Int, Double>>()
         sales.forEach { sale ->
-            val existing = productMap[sale.productName] ?: Pair(0, 0.0)
-            productMap[sale.productName] = Pair(
-                existing.first + sale.quantity,
-                existing.second + sale.totalAmount
-            )
+            val e = productMap[sale.productName] ?: Pair(0, 0.0)
+            productMap[sale.productName] = Pair(e.first + sale.quantity, e.second + sale.totalAmount)
         }
 
-        // Build product breakdown text
-        val breakdown = StringBuilder()
-        productMap.entries.sortedByDescending { it.value.first }.forEach { (name, data) ->
-            breakdown.append("• $name  ×${data.first}  —  ${CurrencyFormatter.format(data.second)}\n")
+        val sb = StringBuilder()
+        sb.append(String.format("%-22s %5s  %12s\n", "Product", "Qty", "Amount"))
+        sb.append("─".repeat(42) + "\n")
+        productMap.entries.sortedByDescending { it.value.second }.forEach { (name, data) ->
+            val truncName = if (name.length > 20) name.take(19) + "…" else name
+            sb.append(String.format("%-22s %5d  %12s\n",
+                truncName, data.first, CurrencyFormatter.format(data.second)))
         }
-        binding.tvProductBreakdown.text = if (breakdown.isNotEmpty())
-            breakdown.toString().trimEnd()
-        else
-            "No sales recorded today"
+        sb.append("─".repeat(42) + "\n")
+        sb.append(String.format("%-22s %5d  %12s\n", "TOTAL", itemsSold, CurrencyFormatter.format(totalRevenue)))
+        binding.tvPosProductTable.text = if (productMap.isNotEmpty()) sb.toString() else "No sales recorded today"
 
-        // Transaction list — group by transactionId, show time + total
+        // Transaction log
+        val txSb = StringBuilder()
+        txSb.append(String.format("%-8s  %-20s  %10s\n", "Time", "Items", "Total"))
+        txSb.append("─".repeat(42) + "\n")
         val txGroups = sales.groupBy { it.transactionId }
             .entries.sortedByDescending { it.value.first().saleDate }
-
-        val txLines = StringBuilder()
-        txGroups.forEachIndexed { index, (_, txSales) ->
-            val time = timeFmt.format(Date(txSales.first().saleDate))
-            val txTotal = txSales.sumOf { it.totalAmount }
-            val items = txSales.joinToString(", ") { "${it.productName} ×${it.quantity}" }
-            txLines.append("${index + 1}. $time  —  ${CurrencyFormatter.format(txTotal)}\n   $items\n\n")
+        txGroups.forEach { (_, txSales) ->
+            val time  = timeFmt.format(Date(txSales.first().saleDate))
+            val items = txSales.joinToString(", ") { "${it.productName}×${it.quantity}" }
+            val total = CurrencyFormatter.format(txSales.sumOf { it.totalAmount })
+            val truncItems = if (items.length > 18) items.take(17) + "…" else items
+            txSb.append(String.format("%-8s  %-20s  %10s\n", time, truncItems, total))
         }
-        binding.tvTransactionList.text = if (txLines.isNotEmpty())
-            txLines.toString().trimEnd()
-        else
-            "No transactions yet"
+        binding.tvPosTxLog.text = if (txGroups.isNotEmpty()) txSb.toString() else "No transactions yet"
+
+        // Clock-out info
+        val lastOut = prefs.getLastClockOut()
+        if (lastOut > 0) {
+            val outTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(lastOut))
+            binding.tvPosClockOutInfo.text = "Last clock-out: $outTime"
+            binding.tvPosClockOutInfo.visibility = View.VISIBLE
+        } else {
+            binding.tvPosClockOutInfo.visibility = View.GONE
+        }
     }
 
     private fun showSellMode() {
-        binding.btnDailyReport.text = "📋 Daily Report"
-        binding.layoutSellMode.visibility = View.VISIBLE
-        binding.layoutReportMode.visibility = View.GONE
+        binding.btnBottomReport.text = "📋 Report"
+        binding.layoutPosSellMode.visibility = View.VISIBLE
+        binding.layoutPosReportMode.visibility = View.GONE
     }
 
-    // ── Sale success animation ────────────────────────────────────────────────
+    // ── Sale success ──────────────────────────────────────────────────────────
     private fun showSaleSuccess() {
-        binding.layoutStaffSaleSuccess.visibility = View.VISIBLE
-        binding.layoutStaffSaleSuccess.animate().alpha(1f).setDuration(300)
+        binding.layoutPosSaleSuccess.visibility = View.VISIBLE
+        binding.layoutPosSaleSuccess.animate().alpha(1f).setDuration(300)
             .withEndAction {
-                binding.layoutStaffSaleSuccess.postDelayed({
-                    binding.layoutStaffSaleSuccess.animate().alpha(0f).setDuration(300)
-                        .withEndAction {
-                            binding.layoutStaffSaleSuccess.visibility = View.GONE
-                        }.start()
+                binding.layoutPosSaleSuccess.postDelayed({
+                    binding.layoutPosSaleSuccess.animate().alpha(0f).setDuration(300)
+                        .withEndAction { binding.layoutPosSaleSuccess.visibility = View.GONE }
+                        .start()
                 }, 1500)
             }.start()
     }
