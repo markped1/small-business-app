@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SmallBiz POS</string>
+    <string name="business_name">My Business</string>
+    <string name="admin_panel">Admin Panel</string>
+    <string name="sales_screen">Sales</string>
+    <string name="reports">Reports</string>
+    <string name="add_product">Add Product</string>
+    <string name="edit_product">Edit Product</string>
+    <string name="checkout">Checkout</string>
+    <string name="total">Total</string>
+    <string name="cart">Cart</string>
+    <string name="no_products">No products available.\nAsk admin to add products.</string>
+    <string name="cart_empty">Cart is empty.\nTap a product to add it.</string>
+    <string name="sale_success">Sale Recorded!</string>
+    <string name="daily_report">Daily Report</string>
+    <string name="weekly_report">Weekly Report</string>
+    <string name="monthly_report">Monthly Report</string>
+    <string name="gross_sales">Gross Sales</string>
+    <string name="cost_of_goods">Cost of Goods</string>
+    <string name="gross_profit">Gross Profit</string>
+    <string name="expenses">Expenses</string>
+    <string name="net_profit">Net Profit</string>
+</resources>

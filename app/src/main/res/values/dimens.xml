@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_margin">8dp</dimen>
+    <dimen name="card_padding">12dp</dimen>
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="product_image_size">100dp</dimen>
+    <dimen name="cart_image_size">56dp</dimen>
+    <dimen name="admin_image_size">64dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_title">18sp</dimen>
+    <dimen name="text_subtitle">14sp</dimen>
+    <dimen name="text_price">16sp</dimen>
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="qty_button_size">36dp</dimen>
+    <dimen name="report_value_text">22sp</dimen>
+</resources>

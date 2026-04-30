@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SmallBiz"
+        android:usesCleartextTraffic="true">
+
+        <!-- Splash / Setup Activity -->
+        <activity
+            android:name=".ui.setup.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SmallBiz.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Business Setup Activity -->
+        <activity
+            android:name=".ui.setup.BusinessSetupActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Main Sales Activity -->
+        <activity
+            android:name=".ui.sales.SalesActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Admin Activity -->
+        <activity
+            android:name=".ui.admin.AdminActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Admin Login Activity -->
+        <activity
+            android:name=".ui.admin.AdminLoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Reports Activity -->
+        <activity
+            android:name=".ui.reports.ReportsActivity"
+            android:exported="false" />
+
+        <!-- Stock Report Activity -->
+        <activity
+            android:name=".ui.reports.StockReportActivity"
+            android:exported="false" />
+
+        <!-- Add/Edit Product Activity -->
+        <activity
+            android:name=".ui.admin.AddEditProductActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Expenses Activity -->
+        <activity
+            android:name=".ui.admin.ExpensesActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- FileProvider for image picking -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>

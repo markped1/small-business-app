@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primary"
+            app:titleTextColor="@color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- DAILY REPORT CARD                          -->
+            <!-- ═══════════════════════════════════════════ -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_report_card_daily"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="📅 Daily Report"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary" />
+
+                        <TextView
+                            android:id="@+id/tvDailyTransactions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0 transactions"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvDailyPeriod"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Today"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_secondary"
+                        android:paddingBottom="12dp" />
+
+                    <!-- Gross Sales row -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gross Sales" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvDailySales" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                    </LinearLayout>
+                    <!-- Cost of Goods row -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Cost of Goods" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvDailyCost" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+                    <!-- Gross Profit row -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gross Profit" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvDailyGrossProfit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/green_500" />
+                    </LinearLayout>
+                    <!-- Expenses row -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Expenses" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvDailyExpenses" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/red_400" />
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/grey_300" android:layout_marginTop="8dp" android:layout_marginBottom="8dp" />
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="NET PROFIT" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/text_secondary" android:letterSpacing="0.05" />
+                        <TextView android:id="@+id/tvDailyNetProfit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="22sp" android:textStyle="bold" android:textColor="@color/green_500" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- WEEKLY REPORT CARD                         -->
+            <!-- ═══════════════════════════════════════════ -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_report_card_weekly"
+                    android:padding="16dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="📆 Weekly Report" android:textSize="17sp" android:textStyle="bold" android:textColor="#2E7D32" />
+                        <TextView android:id="@+id/tvWeeklyTransactions" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 transactions" android:textSize="12sp" android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <TextView android:id="@+id/tvWeeklyPeriod" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="This Week" android:textSize="13sp" android:textColor="@color/text_secondary" android:paddingBottom="12dp" />
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gross Sales" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvWeeklySales" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Cost of Goods" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvWeeklyCost" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gross Profit" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvWeeklyGrossProfit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/green_500" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Expenses" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvWeeklyExpenses" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/red_400" />
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/grey_300" android:layout_marginTop="8dp" android:layout_marginBottom="8dp" />
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="NET PROFIT" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/text_secondary" android:letterSpacing="0.05" />
+                        <TextView android:id="@+id/tvWeeklyNetProfit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="22sp" android:textStyle="bold" android:textColor="@color/green_500" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- MONTHLY REPORT CARD                        -->
+            <!-- ═══════════════════════════════════════════ -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_report_card_monthly"
+                    android:padding="16dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="🗓 Monthly Report" android:textSize="17sp" android:textStyle="bold" android:textColor="#E65100" />
+                        <TextView android:id="@+id/tvMonthlyTransactions" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 transactions" android:textSize="12sp" android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <TextView android:id="@+id/tvMonthlyPeriod" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="This Month" android:textSize="13sp" android:textColor="@color/text_secondary" android:paddingBottom="12dp" />
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gross Sales" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvMonthlySales" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Cost of Goods" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvMonthlyCost" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gross Profit" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvMonthlyGrossProfit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/green_500" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Expenses" android:textSize="13sp" android:textColor="@color/text_secondary" />
+                        <TextView android:id="@+id/tvMonthlyExpenses" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/red_400" />
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/grey_300" android:layout_marginTop="8dp" android:layout_marginBottom="8dp" />
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="NET PROFIT" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/text_secondary" android:letterSpacing="0.05" />
+                        <TextView android:id="@+id/tvMonthlyNetProfit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="22sp" android:textStyle="bold" android:textColor="@color/green_500" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
