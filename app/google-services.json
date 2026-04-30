@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "156982439619",
+    "project_id": "small-business-pos-a3a12",
+    "storage_bucket": "small-business-pos-a3a12.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156982439619:android:83991a0beb82129bccbc76",
+        "android_client_info": {
+          "package_name": "com.smallbiz.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqW4FpMdncl2nOY63joOM4vZqNQ2gw4lw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

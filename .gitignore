@@ -55,8 +55,8 @@ captures/
 .externalNativeBuild
 .cxx/
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
+# Google Services — tracked in repo (public Firebase project, no private keys)
+# google-services.json is intentionally committed for CI/CD builds
 
 # Signing reports
 signingReport/
