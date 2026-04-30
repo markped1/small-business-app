@@ -22,7 +22,11 @@ jobs:
         with:
           java-version: "17"
           distribution: temurin
-          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: "8.4"
 
       - name: Get version
         id: ver
@@ -31,25 +35,19 @@ jobs:
           VC=$(grep 'versionCode' SmallBizApp/app/build.gradle | head -1 | grep -o '[0-9]*' | head -1)
           echo "vn=${VN}" >> $GITHUB_OUTPUT
           echo "vc=${VC}" >> $GITHUB_OUTPUT
-          echo "tag=v${VN}" >> $GITHUB_OUTPUT
-
-      - name: Download Gradle wrapper jar
-        run: |
-          mkdir -p SmallBizApp/gradle/wrapper
-          curl -sL "https://github.com/gradle/gradle/raw/v8.4.0/gradle/wrapper/gradle-wrapper.jar" \
-            -o SmallBizApp/gradle/wrapper/gradle-wrapper.jar
-          chmod +x SmallBizApp/gradlew
+          echo "Version ${VN} (code ${VC})"
 
       - name: Build APK
         working-directory: SmallBizApp
-        run: ./gradlew assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon
         env:
           GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
       - name: Prepare APK
         run: |
           mkdir -p out
-          cp SmallBizApp/app/build/outputs/apk/debug/app-debug.apk out/ToMegaPOS-v${{ steps.ver.outputs.vn }}.apk
+          cp SmallBizApp/app/build/outputs/apk/debug/app-debug.apk "out/ToMegaPOS-v${{ steps.ver.outputs.vn }}.apk"
+          ls -lh out/
 
       - name: Write release notes
         run: |
@@ -60,22 +58,9 @@ jobs:
             CHANGES=$(git log "${PREV}..HEAD" --oneline --pretty=format:"- %s")
           fi
           DATE=$(date -u '+%d %B %Y %H:%M UTC')
-          cat > release_notes.md << MDEOF
-          ## ToMega POS v${{ steps.ver.outputs.vn }}
-          Version Code: ${{ steps.ver.outputs.vc }}
-          Built: ${DATE}
-
-          ### Changes
-          ${CHANGES}
-
-          ### Install
-          1. Download the APK file below
-          2. Phone Settings > Security > Allow unknown sources
-          3. Open the APK and install
-          4. Your data is preserved automatically
-
-          Phones already running ToMega POS will be notified automatically.
-          MDEOF
+          printf "## ToMega POS v%s\nVersion Code: %s\nBuilt: %s\n\n### Changes\n%s\n\n### Install\n1. Download the APK below\n2. Phone Settings > Security > Allow unknown sources\n3. Open the APK and install\n4. Your data is preserved automatically\n\nPhones already running ToMega POS will be notified automatically." \
+            "${{ steps.ver.outputs.vn }}" "${{ steps.ver.outputs.vc }}" "$DATE" "$CHANGES" \
+            > release_notes.md
 
       - name: Remove old release
         env:
@@ -90,12 +75,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=v${{ steps.ver.outputs.vn }}
-          APK=out/ToMegaPOS-v${{ steps.ver.outputs.vn }}.apk
+          APK="out/ToMegaPOS-v${{ steps.ver.outputs.vn }}.apk"
           gh release create "$TAG" "$APK" \
             --repo "${{ github.repository }}" \
             --title "ToMega POS v${{ steps.ver.outputs.vn }}" \
             --notes-file release_notes.md \
             --latest
+          echo "Released: $TAG"
 
       - name: Update smallbusiness tag
         env:
