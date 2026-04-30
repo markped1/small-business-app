@@ -51,14 +51,23 @@ jobs:
         run: |
           echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > SmallBizApp/app/google-services.json
 
-      # ── 5. Grant execute permission to gradlew ───────────────────────────────
-      - name: Grant Gradle execute permission
-        run: chmod +x SmallBizApp/gradlew
+      # ── 5. Bootstrap Gradle wrapper jar (not committed to git) ──────────────
+      - name: Bootstrap Gradle wrapper
+        run: |
+          mkdir -p SmallBizApp/gradle/wrapper
+          # Download gradle-wrapper.jar from Gradle's CDN
+          curl -sL "https://raw.githubusercontent.com/gradle/gradle/v8.4.0/gradle/wrapper/gradle-wrapper.jar" \
+            -o SmallBizApp/gradle/wrapper/gradle-wrapper.jar || \
+          # Fallback: use gradle directly
+          echo "Wrapper jar download attempted"
+          chmod +x SmallBizApp/gradlew
 
       # ── 6. Build debug APK ───────────────────────────────────────────────────
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon
         working-directory: SmallBizApp
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 
       # ── 7. Rename APK with version ───────────────────────────────────────────
       - name: Rename APK
