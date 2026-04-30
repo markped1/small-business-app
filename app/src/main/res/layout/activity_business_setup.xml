@@ -126,6 +126,45 @@
                         android:imeOptions="actionDone" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Currency Selector -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="Currency"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_secondary" />
+
+                <LinearLayout
+                    android:id="@+id/layoutCurrencyPicker"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:background="@drawable/bg_currency_selector"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tvSelectedCurrency"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🇳🇬  NGN – Nigerian Naira (₦)"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="▼"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary" />
+                </LinearLayout>
+
                 <Button
                     android:id="@+id/btnSave"
                     android:layout_width="match_parent"

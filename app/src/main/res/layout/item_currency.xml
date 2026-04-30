@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp">
+
+    <!-- Currency name + code -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvCurrencyLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🇳🇬  NGN – Nigerian Naira (₦)"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary" />
+    </LinearLayout>
+
+    <!-- Symbol badge -->
+    <TextView
+        android:id="@+id/tvCurrencyCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="₦"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp" />
+
+    <!-- Selected checkmark -->
+    <TextView
+        android:id="@+id/tvCurrencyCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="✓"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/green_500"
+        android:visibility="gone" />
+
+</LinearLayout>
