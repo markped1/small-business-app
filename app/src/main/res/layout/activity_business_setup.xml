@@ -126,7 +126,8 @@
                         android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Staff PIN section -->
+                <!-- Staff PIN section — REMOVED: staff now managed in Admin Panel → Manage Staff -->
+                <!-- Gmail Backup section -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -137,7 +138,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Staff PIN (optional)"
+                    android:text="📧 Gmail for Backup (recommended)"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
@@ -146,25 +147,23 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Staff can only enter sales and view today's total. They cannot see profit, stock, or reports."
+                    android:text="Your data will be backed up to Google Drive. Staff are managed separately in the Admin Panel."
                     android:textSize="12sp"
                     android:textColor="@color/text_secondary"
                     android:paddingBottom="10dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilStaffPin"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Staff PIN (min 4 digits)"
-                    app:passwordToggleEnabled="true"
-                    app:helperText="Leave blank if you don't want staff login">
+                    android:hint="Gmail Address (optional)"
+                    app:helperText="Used for data backup only">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etStaffPin"
+                        android:id="@+id/etAdminGmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberPassword"
+                        android:inputType="textEmailAddress"
                         android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 

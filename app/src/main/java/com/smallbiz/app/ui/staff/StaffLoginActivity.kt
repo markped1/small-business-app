@@ -8,12 +8,6 @@ import com.smallbiz.app.databinding.ActivityStaffLoginBinding
 import com.smallbiz.app.ui.admin.AdminActivity
 import com.smallbiz.app.utils.PrefsManager
 
-/**
- * Unified PIN login screen.
- * - Staff PIN  → StaffSalesActivity (sell only + today's total)
- * - Admin PIN  → AdminActivity (full access)
- * The user just enters their PIN — the app figures out the role automatically.
- */
 class StaffLoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStaffLoginBinding
@@ -28,17 +22,27 @@ class StaffLoginActivity : AppCompatActivity() {
         prefs = PrefsManager(this)
         binding.tvBusinessName.text = prefs.getBusinessName()
 
+        // Show staff count hint
+        val staffCount = prefs.getStaffList().size
+        binding.tvLoginHint.text = if (staffCount > 0)
+            "Admin PIN → Full access  |  Staff PIN → Sales only\n$staffCount staff member(s) registered"
+        else
+            "Enter Admin PIN to continue"
+
         binding.btnLogin.setOnClickListener {
-            val pin = binding.etPin.text.toString()
+            val pin  = binding.etPin.text.toString()
             val role = prefs.getRoleForPin(pin)
 
-            when (role) {
-                "admin" -> {
+            when {
+                role == "admin" -> {
                     startActivity(Intent(this, AdminActivity::class.java))
                     finish()
                 }
-                "staff" -> {
-                    startActivity(Intent(this, StaffSalesActivity::class.java))
+                role != null && role.startsWith("staff:") -> {
+                    val staffName = role.removePrefix("staff:")
+                    val intent = Intent(this, StaffSalesActivity::class.java)
+                    intent.putExtra(StaffSalesActivity.EXTRA_STAFF_NAME, staffName)
+                    startActivity(intent)
                     finish()
                 }
                 else -> {

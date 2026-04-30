@@ -28,7 +28,7 @@ class BusinessSetupActivity : AppCompatActivity() {
             binding.etBusinessName.setText(prefs.getBusinessName())
             binding.etBusinessAddress.setText(prefs.getBusinessAddress())
             binding.etAdminPin.setText(prefs.getAdminPin())
-            binding.etStaffPin.setText(prefs.getStaffPin())
+            binding.etAdminGmail.setText(prefs.getAdminGmail())
             binding.btnSave.text = "Update Business Info"
             selectedCurrencyCode = prefs.getCurrencyCode()
             updateCurrencyDisplay(selectedCurrencyCode)
@@ -50,20 +50,22 @@ class BusinessSetupActivity : AppCompatActivity() {
             val address    = binding.etBusinessAddress.text.toString().trim()
             val pin        = binding.etAdminPin.text.toString().trim()
             val confirmPin = binding.etConfirmPin.text.toString().trim()
-            val staffPin   = binding.etStaffPin.text.toString().trim()
+            val gmail      = binding.etAdminGmail.text.toString().trim()
 
             when {
                 name.isEmpty()      -> binding.etBusinessName.error = "Business name is required"
                 address.isEmpty()   -> binding.etBusinessAddress.error = "Address is required"
                 pin.length < 4      -> binding.etAdminPin.error = "PIN must be at least 4 digits"
                 pin != confirmPin   -> binding.etConfirmPin.error = "PINs do not match"
-                staffPin.isNotEmpty() && staffPin.length < 4 ->
-                    binding.etStaffPin.error = "Staff PIN must be at least 4 digits"
-                staffPin.isNotEmpty() && staffPin == pin ->
-                    binding.etStaffPin.error = "Staff PIN must be different from Admin PIN"
+                gmail.isNotEmpty() && !android.util.Patterns.EMAIL_ADDRESS.matcher(gmail).matches() ->
+                    binding.etAdminGmail.error = "Enter a valid Gmail address"
                 else -> {
                     prefs.saveBusinessInfo(name, address, pin, selectedCurrencyCode)
-                    if (staffPin.isNotEmpty()) prefs.saveStaffPin(staffPin)
+                    if (gmail.isNotEmpty()) prefs.saveAdminGmail(gmail)
+                    // Register business in Firebase analytics
+                    com.smallbiz.app.analytics.BusinessAnalytics.registerBusiness(
+                        this, name, gmail
+                    )
                     Toast.makeText(this, "Business setup complete!", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, SalesActivity::class.java))
                     finish()

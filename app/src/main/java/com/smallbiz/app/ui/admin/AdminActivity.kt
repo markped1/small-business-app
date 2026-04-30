@@ -93,6 +93,10 @@ class AdminActivity : AppCompatActivity() {
             startActivity(Intent(this, BusinessSetupActivity::class.java))
         }
 
+        binding.btnManageStaff.setOnClickListener {
+            startActivity(Intent(this, ManageStaffActivity::class.java))
+        }
+
         binding.btnStockReport.setOnClickListener {
             startActivity(Intent(this, StockReportActivity::class.java))
         }

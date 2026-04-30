@@ -1,0 +1,152 @@
+name: Build & Release ToMega POS
+
+# ── Triggers ──────────────────────────────────────────────────────────────────
+# Runs automatically on every push to main branch.
+# Reads versionName from app/build.gradle and creates a GitHub Release.
+# If a release with that tag already exists, it updates the APK asset.
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:   # Allow manual trigger from GitHub Actions UI
+
+# ── Permissions ───────────────────────────────────────────────────────────────
+permissions:
+  contents: write      # Needed to create releases and upload assets
+
+jobs:
+  build-and-release:
+    name: Build APK & Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout code ────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Full history for changelog generation
+
+      # ── 2. Set up JDK 17 ────────────────────────────────────────────────────
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      # ── 3. Read version from build.gradle ───────────────────────────────────
+      - name: Extract version info
+        id: version
+        run: |
+          VERSION_NAME=$(grep 'versionName' app/build.gradle | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          VERSION_CODE=$(grep 'versionCode' app/build.gradle | head -1 | grep -o '[0-9]*')
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "📦 Version: $VERSION_NAME (code: $VERSION_CODE)"
+        working-directory: SmallBizApp/app
+
+      # ── 4. Write google-services.json from secret ────────────────────────────
+      - name: Write google-services.json
+        run: |
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > SmallBizApp/app/google-services.json
+
+      # ── 5. Grant execute permission to gradlew ───────────────────────────────
+      - name: Grant Gradle execute permission
+        run: chmod +x SmallBizApp/gradlew
+
+      # ── 6. Build debug APK ───────────────────────────────────────────────────
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --no-daemon
+        working-directory: SmallBizApp
+
+      # ── 7. Rename APK with version ───────────────────────────────────────────
+      - name: Rename APK
+        run: |
+          mkdir -p SmallBizApp/release
+          cp SmallBizApp/app/build/outputs/apk/debug/app-debug.apk \
+             SmallBizApp/release/ToMegaPOS-v${{ steps.version.outputs.version_name }}.apk
+          echo "APK size: $(du -sh SmallBizApp/release/ToMegaPOS-v${{ steps.version.outputs.version_name }}.apk)"
+
+      # ── 8. Generate changelog from recent commits ────────────────────────────
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get commits since last tag, or last 10 if no previous tag
+          LAST_TAG=$(git tag --sort=-version:refname | head -2 | tail -1 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            COMMITS=$(git log --oneline -10 --pretty=format:"• %s" 2>/dev/null || echo "• Initial release")
+          else
+            COMMITS=$(git log ${LAST_TAG}..HEAD --oneline --pretty=format:"• %s" 2>/dev/null || echo "• Updates and improvements")
+          fi
+          # Escape for GitHub output
+          COMMITS="${COMMITS//'%'/'%25'}"
+          COMMITS="${COMMITS//$'\n'/'%0A'}"
+          COMMITS="${COMMITS//$'\r'/'%0D'}"
+          echo "commits=$COMMITS" >> $GITHUB_OUTPUT
+
+      # ── 9. Delete existing release with same tag (if any) ────────────────────
+      - name: Delete existing release (if exists)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v${{ steps.version.outputs.version_name }}"
+          # Try to delete release — ignore error if it doesn't exist
+          gh release delete "$TAG" --yes --repo ${{ github.repository }} 2>/dev/null || true
+          # Delete the tag too
+          git push origin --delete "refs/tags/$TAG" 2>/dev/null || true
+
+      # ── 10. Create GitHub Release with APK ───────────────────────────────────
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v${{ steps.version.outputs.version_name }}"
+          APK="SmallBizApp/release/ToMegaPOS-v${{ steps.version.outputs.version_name }}.apk"
+          
+          gh release create "$TAG" \
+            --repo ${{ github.repository }} \
+            --title "ToMega POS v${{ steps.version.outputs.version_name }}" \
+            --notes "## ToMega POS v${{ steps.version.outputs.version_name }}
+
+**Version Code:** ${{ steps.version.outputs.version_code }}
+**Build Date:** $(date -u '+%d %B %Y %H:%M UTC')
+
+### What's New
+${{ steps.changelog.outputs.commits }}
+
+### Installation
+1. Download the APK below
+2. On your Android phone: Settings → Security → Allow unknown sources
+3. Open the downloaded APK and install
+4. Your existing data is preserved automatically
+
+### Auto-Update
+Devices running ToMega POS will be notified of this update automatically on next launch." \
+            --latest \
+            "$APK"
+          
+          echo "✅ Release created: $TAG"
+          echo "📱 APK: $APK"
+
+      # ── 11. Update the 'smallbusiness' tag to point to latest ────────────────
+      - name: Update smallbusiness tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Keep the original 'smallbusiness' tag updated for backward compat
+          git push origin --delete refs/tags/smallbusiness 2>/dev/null || true
+          git tag -f smallbusiness
+          git push origin refs/tags/smallbusiness --force
+
+      # ── 12. Summary ──────────────────────────────────────────────────────────
+      - name: Build summary
+        run: |
+          echo "## ✅ ToMega POS v${{ steps.version.outputs.version_name }} Released" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Version | v${{ steps.version.outputs.version_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Version Code | ${{ steps.version.outputs.version_code }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tag | v${{ steps.version.outputs.version_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Release URL | https://github.com/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.version_name }} |" >> $GITHUB_STEP_SUMMARY

@@ -32,6 +32,11 @@ class StaffSalesActivity : AppCompatActivity() {
 
     private var allProducts: List<Product> = emptyList()
     private var isReportMode = false
+    private var staffName: String = "Staff"
+
+    companion object {
+        const val EXTRA_STAFF_NAME = "extra_staff_name"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +45,11 @@ class StaffSalesActivity : AppCompatActivity() {
 
         prefs = PrefsManager(this)
         repository = AppRepository(this)
+        staffName = intent.getStringExtra(EXTRA_STAFF_NAME) ?: "Staff"
 
-        // Header
+        // Header — show staff name
         binding.tvPosBusinessName.text = prefs.getBusinessName()
-        binding.tvPosAddress.text = prefs.getBusinessAddress()
+        binding.tvPosAddress.text = "${prefs.getBusinessAddress()}  •  👤 $staffName"
 
         setupProductList()
         setupCart()
@@ -211,10 +217,10 @@ class StaffSalesActivity : AppCompatActivity() {
                 "This will record that sales for today have ended."
             )
             .setPositiveButton("Clock Out") { _, _ ->
-                prefs.recordClockOut()
+                prefs.recordClockOut(staffName)
                 Toast.makeText(
                     this,
-                    "✓ Clocked out at $now\nHave a good rest!",
+                    "✓ $staffName clocked out at $now\nHave a good rest!",
                     Toast.LENGTH_LONG
                 ).show()
                 finish()

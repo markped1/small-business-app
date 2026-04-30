@@ -97,6 +97,12 @@
             android:name=".ui.staff.StaffSalesActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- Manage Staff Activity -->
+        <activity
+            android:name=".ui.admin.ManageStaffActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.license.LicenseActivity"
             android:exported="false"
