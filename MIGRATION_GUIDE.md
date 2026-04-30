@@ -133,11 +133,35 @@ database.execSQL("ALTER TABLE sales_new RENAME TO sales")
 
 ## Update delivery
 
-Updates are delivered silently via Firebase Remote Config.
+Updates are delivered automatically via GitHub Releases.
 See `UpdateManager.kt` for implementation details.
 
-The user sees a non-blocking dialog:
-> "Update available — v1.1. Bug fixes. Install now or later?"
+### How to release a new version
 
-They can dismiss it and keep working. The update is NOT forced
-unless `force_update = true` in Remote Config (use only for security fixes).
+1. **Bump version** in `app/build.gradle`:
+   ```groovy
+   versionCode 2        // increment by 1 each release
+   versionName "1.1"    // semantic version
+   ```
+
+2. **Build the APK**:
+   ```bash
+   ./gradlew assembleDebug
+   ```
+   APK is at: `app/build/outputs/apk/debug/app-debug.apk`
+
+3. **Create a GitHub Release**:
+   - Go to: https://github.com/markped1/small-business-app/releases
+   - Click **"Draft a new release"**
+   - **Tag**: `v1.1`  ← must match versionName (with or without "v")
+   - **Title**: `ToMega POS v1.1`
+   - **Description**: what changed (shown to users in the update dialog)
+   - **Attach** the APK file
+   - Click **"Publish release"**
+
+4. **All installed apps** will see the update dialog on next launch.
+
+The user sees a non-blocking dialog:
+> "🔄 Update Available — v1.1. [release notes]. Download size: X MB. Install now or later?"
+
+They can dismiss it and keep working. The update downloads in the background and prompts to install when done.

@@ -81,11 +81,8 @@ dependencies {
     // SharedPreferences
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
-    // Firebase — Realtime Database for remote viewing + Remote Config for updates
+    // Firebase — Realtime Database for remote viewing
     implementation platform('com.google.firebase:firebase-bom:32.7.0')
     implementation 'com.google.firebase:firebase-database-ktx'
-    implementation 'com.google.firebase:firebase-config-ktx'
-
-    // WorkManager — background update download
-    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+    // Note: firebase-config-ktx removed — updates now use GitHub Releases API directly
 }
