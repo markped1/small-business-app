@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="14dp">
 
         <!-- ── Product Header ── -->
         <LinearLayout
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:paddingStart="10dp">
+                android:paddingStart="12dp">
 
                 <TextView
                     android:id="@+id/tvStockProductName"
@@ -60,28 +60,25 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ── Divider ── -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_200"
-            android:layout_marginBottom="10dp" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/grey_200" android:layout_marginBottom="10dp" />
 
-        <!-- ── Stock Movement Section ── -->
+        <!-- ── STOCK MOVEMENT label ── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="STOCK MOVEMENT"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary"
-            android:letterSpacing="0.1"
-            android:paddingBottom="6dp" />
+            android:letterSpacing="0.08"
+            android:paddingBottom="8dp" />
 
+        <!-- Opening − Sold = Remaining boxes -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <!-- Opening Stock -->
             <LinearLayout
@@ -90,15 +87,14 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="@color/blue_100"
-                android:padding="8dp"
-                android:layout_marginEnd="4dp">
+                android:background="@drawable/bg_stock_box_blue"
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Opening"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:textColor="@color/text_secondary" />
 
                 <TextView
@@ -106,7 +102,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/primary" />
 
@@ -118,16 +114,14 @@
                     android:textColor="@color/text_secondary" />
             </LinearLayout>
 
-            <!-- Arrow -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="24dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="−"
-                android:textSize="20sp"
-                android:textColor="@color/red_400"
-                android:paddingStart="2dp"
-                android:paddingEnd="2dp" />
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/red_400" />
 
             <!-- Sold Today -->
             <LinearLayout
@@ -136,16 +130,14 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="@color/red_100"
-                android:padding="8dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp">
+                android:background="@drawable/bg_stock_box_red"
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sold Today"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:textColor="@color/text_secondary" />
 
                 <TextView
@@ -153,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/red_400" />
 
@@ -165,16 +157,14 @@
                     android:textColor="@color/text_secondary" />
             </LinearLayout>
 
-            <!-- Arrow -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="24dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="="
-                android:textSize="20sp"
-                android:textColor="@color/text_secondary"
-                android:paddingStart="2dp"
-                android:paddingEnd="2dp" />
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary" />
 
             <!-- Remaining -->
             <LinearLayout
@@ -183,15 +173,14 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="@color/green_100"
-                android:padding="8dp"
-                android:layout_marginStart="4dp">
+                android:background="@drawable/bg_stock_box_green"
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Remaining"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:textColor="@color/text_secondary" />
 
                 <TextView
@@ -199,7 +188,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/green_500" />
 
@@ -212,202 +201,65 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ── Divider ── -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_200"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="10dp" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/grey_200" android:layout_marginTop="12dp" android:layout_marginBottom="10dp" />
 
-        <!-- ── Value of Remaining Stock ── -->
+        <!-- ── VALUE IN STOCK ── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="VALUE IN STOCK"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary"
-            android:letterSpacing="0.1"
-            android:paddingBottom="6dp" />
+            android:letterSpacing="0.08"
+            android:paddingBottom="8dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 
-            <!-- Purchase value remaining -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginEnd="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Purchase Value"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tvPurchaseValueRemaining"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₦0.00"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary" />
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="6dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Purchase Value" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                <TextView android:id="@+id/tvPurchaseValueRemaining" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_primary" />
             </LinearLayout>
 
-            <!-- Sales value remaining -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sales Value"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tvSalesValueRemaining"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₦0.00"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary" />
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="6dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sales Value" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                <TextView android:id="@+id/tvSalesValueRemaining" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/primary" />
             </LinearLayout>
 
-            <!-- Profit value remaining -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Profit in Stock"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tvProfitValueRemaining"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₦0.00"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/green_500" />
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Profit in Stock" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                <TextView android:id="@+id/tvProfitValueRemaining" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/green_500" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ── Divider ── -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_200"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="10dp" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/grey_200" android:layout_marginTop="12dp" android:layout_marginBottom="10dp" />
 
-        <!-- ── Today's Sales Activity ── -->
+        <!-- ── TODAY'S SALES ── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TODAY'S SALES"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary"
-            android:letterSpacing="0.1"
-            android:paddingBottom="6dp" />
+            android:letterSpacing="0.08"
+            android:paddingBottom="8dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginEnd="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Revenue"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tvTodaySales"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₦0.00"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary" />
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="6dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Revenue" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                <TextView android:id="@+id/tvTodaySales" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/primary" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cost"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tvTodayCost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₦0.00"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_secondary" />
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="6dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cost" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                <TextView android:id="@+id/tvTodayCost" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_primary" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Profit"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tvTodayProfit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₦0.00"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/green_500" />
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Profit" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                <TextView android:id="@+id/tvTodayProfit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₦0.00" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/green_500" />
             </LinearLayout>
         </LinearLayout>
 

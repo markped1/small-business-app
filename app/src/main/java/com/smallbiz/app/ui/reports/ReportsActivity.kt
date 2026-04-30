@@ -43,10 +43,10 @@ class ReportsActivity : AppCompatActivity() {
     private fun bindDaily(s: ReportSummary) {
         binding.tvDailyPeriod.text = s.period
         binding.tvDailyTransactions.text = "${s.transactionCount} transactions"
-        binding.tvDailySales.text = CurrencyFormatter.format(s.totalSales)
-        binding.tvDailyCost.text = CurrencyFormatter.format(s.totalCost)
-        binding.tvDailyGrossProfit.text = CurrencyFormatter.format(s.grossProfit)
-        binding.tvDailyExpenses.text = CurrencyFormatter.format(s.totalExpenses)
+        bindRow(binding.rowDailySales.root,    "Gross Sales",    s.totalSales,    R.color.text_primary)
+        bindRow(binding.rowDailyCost.root,     "Cost of Goods",  s.totalCost,     R.color.text_secondary)
+        bindRow(binding.rowDailyGross.root,    "Gross Profit",   s.grossProfit,   R.color.green_500)
+        bindRow(binding.rowDailyExpenses.root, "Expenses",       s.totalExpenses, R.color.red_400)
         binding.tvDailyNetProfit.text = CurrencyFormatter.format(s.netProfit)
         colorize(binding.tvDailyNetProfit, s.netProfit)
     }
@@ -54,10 +54,10 @@ class ReportsActivity : AppCompatActivity() {
     private fun bindWeekly(s: ReportSummary) {
         binding.tvWeeklyPeriod.text = s.period
         binding.tvWeeklyTransactions.text = "${s.transactionCount} transactions"
-        binding.tvWeeklySales.text = CurrencyFormatter.format(s.totalSales)
-        binding.tvWeeklyCost.text = CurrencyFormatter.format(s.totalCost)
-        binding.tvWeeklyGrossProfit.text = CurrencyFormatter.format(s.grossProfit)
-        binding.tvWeeklyExpenses.text = CurrencyFormatter.format(s.totalExpenses)
+        bindRow(binding.rowWeeklySales.root,    "Gross Sales",    s.totalSales,    R.color.text_primary)
+        bindRow(binding.rowWeeklyCost.root,     "Cost of Goods",  s.totalCost,     R.color.text_secondary)
+        bindRow(binding.rowWeeklyGross.root,    "Gross Profit",   s.grossProfit,   R.color.green_500)
+        bindRow(binding.rowWeeklyExpenses.root, "Expenses",       s.totalExpenses, R.color.red_400)
         binding.tvWeeklyNetProfit.text = CurrencyFormatter.format(s.netProfit)
         colorize(binding.tvWeeklyNetProfit, s.netProfit)
     }
@@ -65,12 +65,20 @@ class ReportsActivity : AppCompatActivity() {
     private fun bindMonthly(s: ReportSummary) {
         binding.tvMonthlyPeriod.text = s.period
         binding.tvMonthlyTransactions.text = "${s.transactionCount} transactions"
-        binding.tvMonthlySales.text = CurrencyFormatter.format(s.totalSales)
-        binding.tvMonthlyCost.text = CurrencyFormatter.format(s.totalCost)
-        binding.tvMonthlyGrossProfit.text = CurrencyFormatter.format(s.grossProfit)
-        binding.tvMonthlyExpenses.text = CurrencyFormatter.format(s.totalExpenses)
+        bindRow(binding.rowMonthlySales.root,    "Gross Sales",    s.totalSales,    R.color.text_primary)
+        bindRow(binding.rowMonthlyCost.root,     "Cost of Goods",  s.totalCost,     R.color.text_secondary)
+        bindRow(binding.rowMonthlyGross.root,    "Gross Profit",   s.grossProfit,   R.color.green_500)
+        bindRow(binding.rowMonthlyExpenses.root, "Expenses",       s.totalExpenses, R.color.red_400)
         binding.tvMonthlyNetProfit.text = CurrencyFormatter.format(s.netProfit)
         colorize(binding.tvMonthlyNetProfit, s.netProfit)
+    }
+
+    private fun bindRow(view: View, label: String, value: Double, colorRes: Int) {
+        view.findViewById<TextView>(R.id.tvRowLabel).text = label
+        view.findViewById<TextView>(R.id.tvRowValue).apply {
+            text = CurrencyFormatter.format(value)
+            setTextColor(getColor(colorRes))
+        }
     }
 
     private fun colorize(view: TextView, value: Double) {
