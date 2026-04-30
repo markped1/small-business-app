@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Brand Colors -->
-    <color name="primary">#1565C0</color>
-    <color name="primary_dark">#0D47A1</color>
-    <color name="primary_light">#E3F2FD</color>
-    <color name="accent">#FF6F00</color>
-    <color name="accent_light">#FFF8E1</color>
+    <!-- ToMega POS Brand Colors — extracted from logo -->
+    <!-- Logo: bright green #1DB954 / #22A832, white, dark charcoal text -->
+    <color name="primary">#1AAD2E</color>         <!-- ToMega logo green -->
+    <color name="primary_dark">#158A24</color>     <!-- darker green for status bar -->
+    <color name="primary_light">#E8F5E9</color>    <!-- very light green tint -->
+    <color name="accent">#158A24</color>           <!-- accent = darker green -->
+    <color name="accent_light">#C8E6C9</color>
 
     <!-- Status Colors -->
-    <color name="green_500">#2E7D32</color>
-    <color name="green_700">#1B5E20</color>
+    <color name="green_500">#1AAD2E</color>        <!-- matches brand green -->
+    <color name="green_700">#158A24</color>
     <color name="green_100">#E8F5E9</color>
     <color name="red_400">#C62828</color>
     <color name="red_100">#FFEBEE</color>
     <color name="orange_500">#E65100</color>
     <color name="orange_100">#FFF3E0</color>
-    <color name="blue_100">#E3F2FD</color>
+    <color name="blue_100">#E8F5E9</color>         <!-- replaced blue tint with green tint -->
 
     <!-- Neutral -->
     <color name="white">#FFFFFF</color>
@@ -30,22 +31,22 @@
 
     <!-- Surface -->
     <color name="surface">#FFFFFF</color>
-    <color name="background">#F0F2F5</color>
+    <color name="background">#F2F6F2</color>       <!-- very subtle green-tinted background -->
     <color name="card_background">#FFFFFF</color>
 
-    <!-- Text — all high-contrast -->
+    <!-- Text — high contrast -->
     <color name="text_primary">#1A1A1A</color>
     <color name="text_secondary">#4A4A4A</color>
     <color name="text_hint">#9E9E9E</color>
     <color name="text_on_dark">#FFFFFF</color>
     <color name="text_on_light">#1A1A1A</color>
 
-    <!-- Report card header strips -->
-    <color name="daily_strip">#1565C0</color>
-    <color name="weekly_strip">#2E7D32</color>
-    <color name="monthly_strip">#E65100</color>
+    <!-- Report card header strips — all green family -->
+    <color name="daily_strip">#1AAD2E</color>      <!-- brand green -->
+    <color name="weekly_strip">#158A24</color>     <!-- darker green -->
+    <color name="monthly_strip">#0D6B1A</color>   <!-- deepest green -->
 
     <!-- Splash gradient -->
-    <color name="splash_start">#1565C0</color>
-    <color name="splash_end">#0D47A1</color>
+    <color name="splash_start">#1AAD2E</color>
+    <color name="splash_end">#158A24</color>
 </resources>

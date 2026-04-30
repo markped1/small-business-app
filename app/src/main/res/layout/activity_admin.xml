@@ -95,6 +95,17 @@
                 app:strokeColor="@color/primary"
                 app:cornerRadius="10dp" />
 
+            <!-- Row 4: License -->
+            <Button
+                android:id="@+id/btnManageLicense"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:text="🔑  License &amp; Activation"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                style="@style/Widget.MaterialComponents.Button.TextButton" />
+
             <!-- Products Section -->
             <LinearLayout
                 android:layout_width="match_parent"

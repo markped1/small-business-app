@@ -100,6 +100,10 @@ class AdminActivity : AppCompatActivity() {
         binding.btnRemoteView.setOnClickListener {
             startActivity(Intent(this, com.smallbiz.app.ui.remote.ConnectBusinessActivity::class.java))
         }
+
+        binding.btnManageLicense.setOnClickListener {
+            startActivity(Intent(this, com.smallbiz.app.ui.license.LicenseActivity::class.java))
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Full ToMega POS logo for splash screen — white version on green background -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Outer white ring -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M100,5 A95,95 0 1,1 99.99,5 Z M100,14 A86,86 0 1,0 100.01,14 Z"/>
+
+    <!-- T letter — white -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M30,55 L30,70 L60,70 L60,130 L75,130 L75,70 L88,70 L88,55 Z"/>
+
+    <!-- M letter — white -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M86,55 L86,130 L101,130 L101,90 L113,112 L122,112 L134,90 L134,130 L149,130 L149,55 L136,55 L117.5,92 L99,55 Z"/>
+
+    <!-- Swoosh arc — semi-transparent white -->
+    <path android:fillColor="#33FFFFFF"
+        android:pathData="M30,48 Q100,20 170,48 Q170,44 100,16 Q30,44 30,48 Z"/>
+
+    <!-- "ToMega POS" text baseline -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M55,148 L145,148 L145,150 L55,150 Z"/>
+
+    <!-- T -->
+    <path android:fillColor="#FFFFFF" android:pathData="M55,138 L55,148 L58,148 L58,138 Z M55,138 L64,138 L64,141 L55,141 Z"/>
+    <!-- o -->
+    <path android:fillColor="#FFFFFF" android:pathData="M66,140 A5,4 0 1,1 65.99,140 Z M66,142 A3,2 0 1,0 66.01,142 Z"/>
+    <!-- M -->
+    <path android:fillColor="#FFFFFF" android:pathData="M74,138 L74,148 L77,148 L77,142 L80,147 L83,142 L83,148 L86,148 L86,138 L83,138 L80,144 L77,138 Z"/>
+    <!-- e -->
+    <path android:fillColor="#FFFFFF" android:pathData="M89,141 L89,148 L98,148 L98,145 L92,145 L92,144 L98,144 L98,141 Z M89,141 L98,141 L98,143 L89,143 Z"/>
+    <!-- g -->
+    <path android:fillColor="#FFFFFF" android:pathData="M101,141 A5,4 0 1,1 100.99,141 Z M101,143 A3,2 0 1,0 101.01,143 Z M104,144 L104,151 L101,151 L101,149 L102,149 L102,144 Z"/>
+    <!-- a -->
+    <path android:fillColor="#FFFFFF" android:pathData="M108,141 L108,148 L117,148 L117,141 Z M108,141 L117,141 L117,143 L108,143 Z M108,144 L117,144 L117,146 L108,146 Z"/>
+
+    <!-- space -->
+
+    <!-- P -->
+    <path android:fillColor="#FFFFFF" android:pathData="M122,138 L122,148 L125,148 L125,144 L130,144 L130,138 Z M125,138 L130,138 L130,141 L125,141 Z"/>
+    <!-- O -->
+    <path android:fillColor="#FFFFFF" android:pathData="M133,138 A7,5 0 1,1 132.99,138 Z M133,141 A4,2 0 1,0 133.01,141 Z"/>
+    <!-- S -->
+    <path android:fillColor="#FFFFFF" android:pathData="M143,138 L143,141 L150,141 L150,144 L143,144 L143,148 L150,148 L150,145 L147,145 L147,144 L150,144 L150,138 Z"/>
+</vector>

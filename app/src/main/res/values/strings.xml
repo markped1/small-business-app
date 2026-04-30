@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SmallBiz POS</string>
+    <string name="app_name">ToMega POS</string>
+    <string name="app_tagline">Smart Sales Management</string>
     <string name="business_name">My Business</string>
     <string name="admin_panel">Admin Panel</string>
     <string name="sales_screen">Sales</string>
@@ -21,4 +22,7 @@
     <string name="gross_profit">Gross Profit</string>
     <string name="expenses">Expenses</string>
     <string name="net_profit">Net Profit</string>
+    <string name="powered_by">Powered by ToMega POS</string>
+    <string name="license_required">License Required</string>
+    <string name="enter_license_key">Enter your license key to activate ToMega POS</string>
 </resources>
