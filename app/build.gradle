@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -70,4 +71,8 @@ dependencies {
 
     // SharedPreferences
     implementation 'androidx.preference:preference-ktx:1.2.1'
+
+    // Firebase — Realtime Database for remote viewing
+    implementation platform('com.google.firebase:firebase-bom:32.7.0')
+    implementation 'com.google.firebase:firebase-database-ktx'
 }
