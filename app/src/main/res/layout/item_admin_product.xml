@@ -142,20 +142,21 @@
             <Button
                 android:id="@+id/btnEditProduct"
                 android:layout_width="80dp"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:text="Edit"
                 android:textSize="11sp"
                 style="@style/Widget.MaterialComponents.Button"
                 android:backgroundTint="@color/primary"
                 android:textColor="@color/white"
                 app:cornerRadius="6dp"
-                android:padding="0dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 android:minHeight="0dp" />
 
             <Button
                 android:id="@+id/btnToggleActive"
                 android:layout_width="80dp"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Deactivate"
                 android:textSize="10sp"
@@ -163,13 +164,14 @@
                 app:strokeColor="@color/grey_300"
                 android:textColor="@color/text_secondary"
                 app:cornerRadius="6dp"
-                android:padding="0dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 android:minHeight="0dp" />
 
             <Button
                 android:id="@+id/btnDeleteProduct"
                 android:layout_width="80dp"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Delete"
                 android:textSize="11sp"
@@ -177,7 +179,8 @@
                 app:strokeColor="@color/red_400"
                 android:textColor="@color/red_400"
                 app:cornerRadius="6dp"
-                android:padding="0dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 android:minHeight="0dp" />
         </LinearLayout>
     </LinearLayout>

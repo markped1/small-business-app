@@ -53,11 +53,15 @@
             <Button
                 android:id="@+id/btnReports"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="wrap_content"
                 android:text="Reports"
                 android:textSize="12sp"
                 android:textColor="@color/primary"
                 android:backgroundTint="@color/white"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
                 style="@style/Widget.MaterialComponents.Button"
                 app:cornerRadius="18dp"
                 android:layout_marginEnd="8dp" />
@@ -250,7 +254,7 @@
                 <Button
                     android:id="@+id/btnCheckout"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:text="✓  Confirm Sale"
                     android:textSize="14sp"
                     android:textStyle="bold"

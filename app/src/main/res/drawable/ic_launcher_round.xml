@@ -1,28 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- ToMega POS round launcher icon -->
+<!--
+    ToMega POS round launcher icon — same as ic_launcher but with circular clip
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- White circle background -->
-    <path android:fillColor="#FFFFFF"
-        android:pathData="M54,4 A50,50 0 1,1 53.99,4 Z"/>
-
-    <!-- Green outer ring -->
+    <!-- Outer green circle (fills entire icon) -->
     <path android:fillColor="#1AAD2E"
-        android:pathData="M54,4 A50,50 0 1,1 53.99,4 Z M54,10 A44,44 0 1,0 54.01,10 Z"/>
+        android:pathData="M54,0 A54,54 0 1,1 53.99,0 Z"/>
+
+    <!-- White inner circle -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M54,8 A46,46 0 1,1 53.99,8 Z"/>
+
+    <!-- Swoosh arc -->
+    <path android:fillColor="#158A24"
+        android:pathData="M20,34 Q54,18 88,34 Q82,26 54,22 Q26,26 20,34 Z"/>
 
     <!-- T letter -->
     <path android:fillColor="#1AAD2E"
-        android:pathData="M18,32 L18,42 L36,42 L36,76 L46,76 L46,42 L52,42 L52,32 Z"/>
+        android:pathData="M14,36 L14,46 L30,46 L30,74 L38,74 L38,46 L48,46 L48,36 Z"/>
 
     <!-- M letter -->
     <path android:fillColor="#1AAD2E"
-        android:pathData="M50,32 L50,76 L60,76 L60,54 L67,68 L73,68 L80,54 L80,76 L90,76 L90,32 L82,32 L70,56 L58,32 Z"/>
+        android:pathData="M46,36 L46,74 L54,74 L54,54 L61,68 L66,68 L73,54 L73,74 L81,74 L81,36 L73,36 L63.5,56 L54,36 Z"/>
 
-    <!-- "POS" label underline -->
+    <!-- P letter (white shadow) -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M80,36 L80,74 L88,74 L88,60 L94,60 Q100,60 100,48 Q100,36 94,36 Z M88,44 L93,44 Q96,44 96,48 Q96,52 93,52 L88,52 Z"/>
+
+    <!-- P letter (green) -->
     <path android:fillColor="#1AAD2E"
-        android:pathData="M36,82 L72,82 L72,84 L36,84 Z"/>
+        android:pathData="M82,38 L82,72 L86,72 L86,58 L92,58 Q98,58 98,48 Q98,38 92,38 Z M86,42 L91,42 Q94,42 94,48 Q94,54 91,54 L86,54 Z"/>
+
+    <!-- "ToMega Pos" underline -->
+    <path android:fillColor="#1AAD2E"
+        android:pathData="M28,84 L80,84 L80,85.5 L28,85.5 Z"/>
+
+    <!-- ToMega Pos text (simplified) -->
+    <path android:fillColor="#1AAD2E"
+        android:pathData="M28,78 L28,83 L30,83 L30,78 Z M28,78 L34,78 L34,80 L28,80 Z
+                          M36,79 A3,2 0 1,1 35.99,79 Z M36,80.5 A1.5,0.8 0 1,0 36.01,80.5 Z
+                          M41,78 L41,83 L43,83 L43,80 L45,82.5 L47,80 L47,83 L49,83 L49,78 L47,78 L45,81 L43,78 Z
+                          M51,80 L51,83 L57,83 L57,81.5 L53,81.5 L53,81 L57,81 L57,80 Z M51,80 L57,80 L57,80.5 L51,80.5 Z
+                          M59,79 A3,2 0 1,1 58.99,79 Z M59,80.5 A1.5,0.8 0 1,0 59.01,80.5 Z M61,81 L61,85 L59,85 L59,84 L60,84 L60,81 Z
+                          M64,80 L64,83 L70,83 L70,80 Z M64,80 L70,80 L70,81 L64,81 Z M64,81.5 L70,81.5 L70,82.5 L64,82.5 Z
+                          M73,78 L73,83 L75,83 L75,81 L78,81 L78,78 Z M75,78 L78,78 L78,79.5 L75,79.5 Z
+                          M80,79 A3,2 0 1,1 79.99,79 Z M80,80.5 A1.5,0.8 0 1,0 80.01,80.5 Z" />
+
 </vector>
