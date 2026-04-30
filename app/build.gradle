@@ -16,6 +16,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Room schema export — writes JSON snapshots to app/schemas/
+        // These files must be committed to git as migration audit trail
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -36,6 +44,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 
@@ -72,7 +81,11 @@ dependencies {
     // SharedPreferences
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
-    // Firebase — Realtime Database for remote viewing
+    // Firebase — Realtime Database for remote viewing + Remote Config for updates
     implementation platform('com.google.firebase:firebase-bom:32.7.0')
     implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'com.google.firebase:firebase-config-ktx'
+
+    // WorkManager — background update download
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
 }

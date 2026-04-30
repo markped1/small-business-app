@@ -9,6 +9,7 @@ import com.smallbiz.app.R
 import com.smallbiz.app.license.LicenseManager
 import com.smallbiz.app.ui.license.LicenseActivity
 import com.smallbiz.app.ui.sales.SalesActivity
+import com.smallbiz.app.update.UpdateManager
 import com.smallbiz.app.utils.PrefsManager
 
 class SplashActivity : AppCompatActivity() {
@@ -23,19 +24,20 @@ class SplashActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             val prefs = PrefsManager(this)
 
-            when {
-                // App is usable (trial active OR licensed) — go to normal flow
-                LicenseManager.isAppUsable(this) -> {
-                    val dest = if (prefs.isBusinessSetup()) SalesActivity::class.java
-                               else BusinessSetupActivity::class.java
-                    startActivity(Intent(this, dest))
-                }
-                // Trial expired and not licensed — go to license screen
-                else -> {
-                    startActivity(Intent(this, LicenseActivity::class.java))
-                }
+            val dest: Class<*> = when {
+                !LicenseManager.isAppUsable(this) -> LicenseActivity::class.java
+                prefs.isBusinessSetup()            -> SalesActivity::class.java
+                else                               -> BusinessSetupActivity::class.java
             }
+            startActivity(Intent(this, dest))
             finish()
         }, 2000)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Check for updates silently in the background — does NOT block the UI
+        // Only shows a dialog if a newer version is available on Firebase Remote Config
+        UpdateManager.checkForUpdate(this)
     }
 }

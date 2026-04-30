@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ToMega POS — Auto Backup Configuration
+    Backs up: Room database, SharedPreferences (business settings, license)
+    Excludes: cached images (can be re-added), temp files
+-->
+<full-backup-content>
+    <!-- Include the Room database -->
+    <include domain="database" path="smallbiz_database" />
+    <include domain="database" path="smallbiz_database-shm" />
+    <include domain="database" path="smallbiz_database-wal" />
+
+    <!-- Include app preferences (business name, PIN, currency, license) -->
+    <include domain="sharedpref" path="smallbiz_prefs.xml" />
+    <include domain="sharedpref" path="tomega_license.xml" />
+
+    <!-- Exclude product images cache (large, can be re-added by admin) -->
+    <exclude domain="file" path="." />
+    <exclude domain="cache" path="." />
+    <exclude domain="external" path="." />
+</full-backup-content>
