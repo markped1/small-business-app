@@ -57,6 +57,8 @@ class ExpensesActivity : AppCompatActivity() {
 
     private fun showAddEditDialog(expense: Expense?) {
         val dialogBinding = DialogAddExpenseBinding.inflate(layoutInflater)
+        // Apply selected currency symbol as prefix
+        dialogBinding.tilExpenseAmount.prefixText = CurrencyFormatter.getCurrencySymbol()
 
         expense?.let {
             dialogBinding.etExpenseDescription.setText(it.description)

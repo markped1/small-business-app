@@ -105,12 +105,12 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilSellingPrice"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:hint="Selling Price *"
-                        app:prefixText="₦">
+                        android:hint="Selling Price *">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etSellingPrice"
@@ -121,12 +121,12 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilCostPrice"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:hint="Cost Price (Purchase Price) *"
-                        app:prefixText="₦"
                         app:helperText="Used to calculate profit">
 
                         <com.google.android.material.textfield.TextInputEditText

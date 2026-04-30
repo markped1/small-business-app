@@ -5,6 +5,7 @@
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -59,6 +60,16 @@
         <!-- Stock Report Activity -->
         <activity
             android:name=".ui.reports.StockReportActivity"
+            android:exported="false" />
+
+        <!-- Remote View Activities -->
+        <activity
+            android:name=".ui.remote.ConnectBusinessActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.remote.RemoteViewActivity"
             android:exported="false" />
 
         <!-- Add/Edit Product Activity -->

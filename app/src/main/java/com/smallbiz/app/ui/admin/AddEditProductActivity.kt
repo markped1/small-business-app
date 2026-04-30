@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.smallbiz.app.R
 import com.smallbiz.app.data.model.Product
 import com.smallbiz.app.databinding.ActivityAddEditProductBinding
+import com.smallbiz.app.utils.CurrencyFormatter
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -69,6 +70,11 @@ class AddEditProductActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        // Apply the admin's chosen currency symbol as prefix on price fields
+        val symbol = CurrencyFormatter.getCurrencySymbol()
+        binding.tilSellingPrice.prefixText = symbol
+        binding.tilCostPrice.prefixText = symbol
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
         if (productId != -1L) {

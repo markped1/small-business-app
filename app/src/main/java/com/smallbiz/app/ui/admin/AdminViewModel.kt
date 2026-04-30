@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.smallbiz.app.data.model.Expense
 import com.smallbiz.app.data.model.Product
 import com.smallbiz.app.data.repository.AppRepository
+import com.smallbiz.app.sync.FirebaseSyncManager
 import kotlinx.coroutines.launch
 
 class AdminViewModel(application: Application) : AndroidViewModel(application) {
@@ -32,6 +33,7 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
 
     fun insertExpense(expense: Expense) = viewModelScope.launch {
         repository.insertExpense(expense)
+        FirebaseSyncManager.pushExpense(expense)
     }
 
     fun updateExpense(expense: Expense) = viewModelScope.launch {

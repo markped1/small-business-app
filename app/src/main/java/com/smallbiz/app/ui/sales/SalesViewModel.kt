@@ -6,6 +6,7 @@ import com.smallbiz.app.data.model.CartItem
 import com.smallbiz.app.data.model.Product
 import com.smallbiz.app.data.model.Sale
 import com.smallbiz.app.data.repository.AppRepository
+import com.smallbiz.app.sync.FirebaseSyncManager
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -86,6 +87,8 @@ class SalesViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch {
             repository.insertSales(sales)
+            // Sync to Firebase so remote viewers see it instantly
+            FirebaseSyncManager.pushSales(sales)
             clearCart()
             onComplete()
         }

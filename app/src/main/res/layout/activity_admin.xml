@@ -80,6 +80,21 @@
                 style="@style/Widget.MaterialComponents.Button"
                 app:cornerRadius="10dp" />
 
+            <!-- Row 3: Remote View -->
+            <Button
+                android:id="@+id/btnRemoteView"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:text="📱  View Sales Remotely"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary"
+                android:backgroundTint="@color/white"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:strokeColor="@color/primary"
+                app:cornerRadius="10dp" />
+
             <!-- Products Section -->
             <LinearLayout
                 android:layout_width="match_parent"

@@ -37,11 +37,18 @@ class PrefsManager(context: Context) {
         CurrencyFormatter.init(getCurrencyCode())
     }
 
+    fun saveRemoteBusinessId(id: String) {
+        prefs.edit().putString(KEY_REMOTE_BIZ_ID, id).apply()
+    }
+
+    fun getRemoteBusinessId(): String? = prefs.getString(KEY_REMOTE_BIZ_ID, null)
+
     companion object {
         private const val KEY_BUSINESS_NAME    = "business_name"
         private const val KEY_BUSINESS_ADDRESS = "business_address"
         private const val KEY_ADMIN_PIN        = "admin_pin"
         private const val KEY_IS_SETUP         = "is_setup"
         private const val KEY_CURRENCY_CODE    = "currency_code"
+        private const val KEY_REMOTE_BIZ_ID    = "remote_biz_id"
     }
 }
