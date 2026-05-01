@@ -32,12 +32,11 @@ jobs:
       - name: Get version
         id: ver
         run: |
-          VN=$(grep 'versionName' app/build.gradle | head -1 | sed 's/.*"\(.*\)".*/\1/')
-          VC=$(grep 'versionCode' app/build.gradle | head -1 | grep -o '[0-9]*' | head -1)
+          VN=$(grep 'versionName' SmallBizApp/app/build.gradle | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          VC=$(grep 'versionCode' SmallBizApp/app/build.gradle | head -1 | grep -o '[0-9]*' | head -1)
           echo "vn=${VN}" >> $GITHUB_OUTPUT
           echo "vc=${VC}" >> $GITHUB_OUTPUT
           echo "Version ${VN} code ${VC}"
-        working-directory: SmallBizApp/app
 
       - name: Build APK
         run: ./gradlew -p SmallBizApp assembleDebug --no-daemon
