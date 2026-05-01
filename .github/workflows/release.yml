@@ -14,19 +14,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-java@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: temurin
+          cache: gradle
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: "8.4"
+      - name: Make gradlew executable
+        run: chmod +x SmallBizApp/gradlew
 
       - name: Get version
         id: ver
@@ -35,22 +36,25 @@ jobs:
           VC=$(grep 'versionCode' SmallBizApp/app/build.gradle | head -1 | grep -o '[0-9]*' | head -1)
           echo "vn=${VN}" >> $GITHUB_OUTPUT
           echo "vc=${VC}" >> $GITHUB_OUTPUT
-          echo "Version ${VN} (code ${VC})"
+          echo "Version ${VN} code ${VC}"
 
       - name: Build APK
         working-directory: SmallBizApp
-        run: gradle assembleDebug --no-daemon
+        run: ./gradlew assembleDebug --no-daemon
         env:
           GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
       - name: Prepare APK
         run: |
           mkdir -p out
-          cp SmallBizApp/app/build/outputs/apk/debug/app-debug.apk "out/ToMegaPOS-v${{ steps.ver.outputs.vn }}.apk"
+          VN="${{ steps.ver.outputs.vn }}"
+          cp SmallBizApp/app/build/outputs/apk/debug/app-debug.apk "out/ToMegaPOS-v${VN}.apk"
           ls -lh out/
 
       - name: Write release notes
         run: |
+          VN="${{ steps.ver.outputs.vn }}"
+          VC="${{ steps.ver.outputs.vc }}"
           PREV=$(git tag --sort=-version:refname | grep -v '^smallbusiness$' | head -1 || true)
           if [ -z "$PREV" ]; then
             CHANGES=$(git log --oneline -6 --pretty=format:"- %s")
@@ -58,30 +62,43 @@ jobs:
             CHANGES=$(git log "${PREV}..HEAD" --oneline --pretty=format:"- %s")
           fi
           DATE=$(date -u '+%d %B %Y %H:%M UTC')
-          printf "## ToMega POS v%s\nVersion Code: %s\nBuilt: %s\n\n### Changes\n%s\n\n### Install\n1. Download the APK below\n2. Phone Settings > Security > Allow unknown sources\n3. Open the APK and install\n4. Your data is preserved automatically\n\nPhones already running ToMega POS will be notified automatically." \
-            "${{ steps.ver.outputs.vn }}" "${{ steps.ver.outputs.vc }}" "$DATE" "$CHANGES" \
-            > release_notes.md
+          cat > release_notes.md << NOTES
+          ## ToMega POS v${VN}
+          Version Code: ${VC}
+          Built: ${DATE}
+
+          ### Changes
+          ${CHANGES}
+
+          ### How to Install
+          1. Download the APK file below
+          2. On your phone: Settings > Security > Allow unknown sources
+          3. Open the downloaded APK and tap Install
+          4. All your existing data is preserved automatically
+
+          Phones already running ToMega POS will see an update notification on next launch.
+          NOTES
 
       - name: Remove old release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG=v${{ steps.ver.outputs.vn }}
-          gh release delete "$TAG" --yes --repo ${{ github.repository }} 2>/dev/null || true
-          git push origin --delete "refs/tags/${TAG}" 2>/dev/null || true
+          VN="${{ steps.ver.outputs.vn }}"
+          gh release delete "v${VN}" --yes --repo "${{ github.repository }}" 2>/dev/null || true
+          git push origin --delete "refs/tags/v${VN}" 2>/dev/null || true
 
       - name: Create release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG=v${{ steps.ver.outputs.vn }}
-          APK="out/ToMegaPOS-v${{ steps.ver.outputs.vn }}.apk"
-          gh release create "$TAG" "$APK" \
+          VN="${{ steps.ver.outputs.vn }}"
+          gh release create "v${VN}" \
+            "out/ToMegaPOS-v${VN}.apk" \
             --repo "${{ github.repository }}" \
-            --title "ToMega POS v${{ steps.ver.outputs.vn }}" \
+            --title "ToMega POS v${VN}" \
             --notes-file release_notes.md \
             --latest
-          echo "Released: $TAG"
+          echo "Released v${VN}"
 
       - name: Update smallbusiness tag
         env:
@@ -90,3 +107,4 @@ jobs:
           git push origin --delete refs/tags/smallbusiness 2>/dev/null || true
           git tag -f smallbusiness
           git push origin refs/tags/smallbusiness --force
+          echo "smallbusiness tag updated"
