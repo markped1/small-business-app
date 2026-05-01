@@ -27,20 +27,20 @@ jobs:
           cache: gradle
 
       - name: Make gradlew executable
-        run: chmod +x SmallBizApp/gradlew
+        run: chmod +x gradlew
 
       - name: Get version
         id: ver
         run: |
-          VN=$(grep 'versionName' SmallBizApp/app/build.gradle | head -1 | sed 's/.*"\(.*\)".*/\1/')
-          VC=$(grep 'versionCode' SmallBizApp/app/build.gradle | head -1 | grep -o '[0-9]*' | head -1)
+          VN=$(grep 'versionName' app/build.gradle | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          VC=$(grep 'versionCode' app/build.gradle | head -1 | grep -o '[0-9]*' | head -1)
           echo "vn=${VN}" >> $GITHUB_OUTPUT
           echo "vc=${VC}" >> $GITHUB_OUTPUT
           echo "Version ${VN} code ${VC}"
+        working-directory: SmallBizApp/app
 
       - name: Build APK
-        working-directory: SmallBizApp
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew -p SmallBizApp assembleDebug --no-daemon
         env:
           GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
